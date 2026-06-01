@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is Devil's Mistress Right For You?</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #FDFAF5;
+}
+
+.quiz-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 20px 32px;
+}
+
+/* ── Header ── */
+.quiz-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.quiz-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1B3A2F;
+  opacity: 0.55;
+  margin-bottom: 8px;
+}
+
+.quiz-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1B3A2F;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.quiz-subtitle {
+  font-size: 13px;
+  color: #5A7A6A;
+  line-height: 1.5;
+}
+
+/* ── Step indicator ── */
+.step-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-bottom: 24px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D5E3DA;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.step-dot.active {
+  background: #1B3A2F;
+  transform: scale(1.25);
+}
+
+.step-dot.done {
+  background: #6BAF8A;
+}
+
+/* ── Question card ── */
+.question-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1.5px solid #E0EBE4;
+  padding: 24px 20px 20px;
+  box-shadow: 0 2px 16px rgba(27,58,47,0.07);
+  display: none;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.question-card.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6BAF8A;
+  margin-bottom: 8px;
+}
+
+.question-text {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1B3A2F;
+  line-height: 1.35;
+  margin-bottom: 18px;
+}
+
+/* ── Answer options ── */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-btn {
+  width: 100%;
+  background: #F4F8F5;
+  border: 1.5px solid #D5E3DA;
+  border-radius: 12px;
+  padding: 13px 16px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option-btn:hover {
+  background: #EAF3EE;
+  border-color: #1B3A2F;
+  transform: translateY(-1px);
+}
+
+.option-btn:active {
+  transform: translateY(0);
+}
+
+.option-btn.selected {
+  background: #1B3A2F;
+  border-color: #1B3A2F;
+}
+
+.option-btn.selected .option-label {
+  color: #FFFFFF;
+}
+
+.option-btn.selected .option-icon {
+  filter: grayscale(0) brightness(1.3);
+}
+
+.option-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.option-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1B3A2F;
+  line-height: 1.35;
+}
+
+/* ── Result card ── */
+.result-card {
+  display: none;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1.5px solid #E0EBE4;
+  box-shadow: 0 2px 20px rgba(27,58,47,0.09);
+  overflow: hidden;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.result-card.active {
+  display: block;
+}
+
+.result-banner {
+  background: #1B3A2F;
+  padding: 22px 20px 18px;
+  text-align: center;
+}
+
+.result-match-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 6px;
+}
+
+.result-strain-name {
+  font-size: 26px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  line-height: 1.15;
+}
+
+.result-strain-type {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+}
+
+.result-body {
+  padding: 20px 20px 22px;
+}
+
+.result-reason {
+  font-size: 13.5px;
+  color: #3D5A4A;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.result-tag {
+  background: #EAF3EE;
+  color: #1B3A2F;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+
+.cta-btn {
+  display: block;
+  width: 100%;
+  background: #1B3A2F;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, transform 0.15s;
+  margin-bottom: 12px;
+}
+
+.cta-btn:hover {
+  background: #254D3F;
+  transform: translateY(-1px);
+}
+
+.cta-btn:active {
+  transform: translateY(0);
+}
+
+.retake-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  color: #5A7A6A;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.retake-btn:hover {
+  color: #1B3A2F;
+}
+
+/* ── Tiebreak fallback (hidden) ── */
+</style>
+</head>
+<body>
+
+<div class="quiz-wrap" id="quizWrap">
+
+  <div class="quiz-header">
+    <p class="quiz-eyebrow">THCa Flower Finder</p>
+    <h2 class="quiz-title">Is Devil's Mistress Right For You?</h2>
+    <p class="quiz-subtitle">Three questions. Your perfect match at the end.</p>
+  </div>
+
+  <div class="step-dots">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+  </div>
+
+  <!-- Question 1 -->
+  <div class="question-card active" id="q0">
+    <p class="question-number">Question 1 of 3</p>
+    <p class="question-text">When do you most want to reach for flower?</p>
+    <div class="options-list">
+      <button class="option-btn" data-q="0" data-scores="DM:2,OR:1,PL:0" onclick="pick(this)">
+        <span class="option-icon">🌙</span>
+        <span class="option-label">Evenings and wind-down time</span>
+      </button>
+      <button class="option-btn" data-q="0" data-scores="DM:0,OR:1,PL:2" onclick="pick(this)">
+        <span class="option-icon">☀️</span>
+        <span class="option-label">Afternoons and social settings</span>
+      </button>
+      <button class="option-btn" data-q="0" data-scores="DM:1,OR:2,PL:1" onclick="pick(this)">
+        <span class="option-icon">🕰️</span>
+        <span class="option-label">Any time — I want something versatile</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question-card" id="q1">
+    <p class="question-number">Question 2 of 3</p>
+    <p class="question-text">What flavor profile sounds most appealing right now?</p>
+    <div class="options-list">
+      <button class="option-btn" data-q="1" data-scores="DM:2,OR:1,PL:0" onclick="pick(this)">
+        <span class="option-icon">🍫</span>
+        <span class="option-label">Dark chocolate, earthy, and spiced</span>
+      </button>
+      <button class="option-btn" data-q="1" data-scores="DM:0,OR:2,PL:1" onclick="pick(this)">
+        <span class="option-icon">🍪</span>
+        <span class="option-label">Sweet, creamy, and dessert-forward</span>
+      </button>
+      <button class="option-btn" data-q="1" data-scores="DM:1,OR:0,PL:2" onclick="pick(this)">
+        <span class="option-icon">🌿</span>
+        <span class="option-label">Gassy, herbal, and complex</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question-card" id="q2">
+    <p class="question-number">Question 3 of 3</p>
+    <p class="question-text">How would you describe your THCa experience level?</p>
+    <div class="options-list">
+      <button class="option-btn" data-q="2" data-scores="DM:1,OR:2,PL:0" onclick="pick(this)">
+        <span class="option-icon">🌱</span>
+        <span class="option-label">Still finding my footing — I prefer approachable options</span>
+      </button>
+      <button class="option-btn" data-q="2" data-scores="DM:2,OR:1,PL:1" onclick="pick(this)">
+        <span class="option-icon">🌿</span>
+        <span class="option-label">Comfortable — I know what I enjoy</span>
+      </button>
+      <button class="option-btn" data-q="2" data-scores="DM:0,OR:1,PL:2" onclick="pick(this)">
+        <span class="option-icon">🔥</span>
+        <span class="option-label">Experienced — I seek out bold, high-THCa flower</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-banner">
+      <p class="result-match-label">Your Match</p>
+      <p class="result-strain-name" id="resultName">—</p>
+      <p class="result-strain-type" id="resultType">—</p>
+    </div>
+    <div class="result-body">
+      <p class="result-reason" id="resultReason">—</p>
+      <div class="result-tags" id="resultTags"></div>
+      <a class="cta-btn" id="resultCta" href="#" target="_blank" rel="noopener noreferrer">Shop Now at Mood</a>
+      <button class="retake-btn" onclick="retake()">Retake the quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  var scores = { DM: 0, OR: 0, PL: 0 };
+  var answers = [null, null, null];
+  var currentQ = 0;
+
+  var strains = {
+    DM: {
+      name: "Devil's Mistress",
+      type: "Clone-Only Hybrid · THCa 18–31%",
+      reason: "You're after something complex and soothing — earthy chocolate notes, a layered eight-terpene profile, and a Cookies lineage with serious depth. Devil's Mistress is your match.",
+      tags: ["Earthy & Spiced", "Soothing", "Clone-Only", "Oreoz × GSC"],
+      url: "https://mood.com/product/devils-mistress",
+      cta: "Shop Devil's Mistress"
+    },
+    OR: {
+      name: "Oreoz",
+      type: "Hybrid · THCa Flower",
+      reason: "You lean toward sweeter, dessert-forward profiles and enjoy something approachable but flavourful. Oreoz — the parent of Devil's Mistress — brings that creamy, cookie character in its own right.",
+      tags: ["Sweet & Creamy", "Dessert-Forward", "Cookies Family", "Approachable"],
+      url: "https://mood.com/product/oreoz?bcc=flower",
+      cta: "Shop Oreoz"
+    },
+    PL: {
+      name: "Pluto",
+      type: "Hybrid · THCa Flower",
+      reason: "You want something bold, gassy, and high-THCa — and you know your way around flower. Pluto delivers a punchy, complex profile built for experienced consumers who don't settle.",
+      tags: ["Bold & Gassy", "High-THCa", "Complex", "For Enthusiasts"],
+      url: "https://mood.com/product/pluto?bcc=flower",
+      cta: "Shop Pluto"
+    }
+  };
+
+  window.pick = function (btn) {
+    var q = parseInt(btn.getAttribute('data-q'));
+    var raw = btn.getAttribute('data-scores');
+
+    // Parse scores string e.g. "DM:2,OR:1,PL:0"
+    var parts = raw.split(',');
+    var delta = {};
+    parts.forEach(function (p) {
+      var kv = p.split(':');
+      delta[kv[0]] = parseInt(kv[1]);
+    });
+
+    // Remove previous selection for this question
+    if (answers[q] !== null) {
+      var prev = answers[q];
+      Object.keys(prev).forEach(function (k) {
+        scores[k] -= prev[k];
+      });
+    }
+
+    // Apply new selection
+    answers[q] = delta;
+    Object.keys(delta).forEach(function (k) {
+      scores[k] += delta[k];
+    });
+
+    // Highlight selected button in this question
+    var allBtns = document.querySelectorAll('[data-q="' + q + '"]');
+    allBtns.forEach(function (b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+
+    // Advance after short delay
+    setTimeout(function () {
+      if (q < 2) {
+        goToQuestion(q + 1);
+      } else {
+        showResult();
+      }
+    }, 320);
+  };
+
+  function goToQuestion(n) {
+    document.getElementById('q' + currentQ).classList.remove('active');
+    updateDots(n);
+    currentQ = n;
+    document.getElementById('q' + n).classList.remove('active'); // reset animation
+    void document.getElementById('q' + n).offsetWidth;           // force reflow
+    document.getElementById('q' + n).classList.add('active');
+    sendHeight();
+  }
+
+  function updateDots(active) {
+    for (var i = 0; i < 3; i++) {
+      var dot = document.getElementById('dot' + i);
+      dot.classList.remove('active', 'done');
+      if (i < active) dot.classList.add('done');
+      else if (i === active) dot.classList.add('active');
+    }
+  }
+
+  function showResult() {
+    // Determine winner — tiebreak: DM > OR > PL (favours the article's featured strain)
+    var winner = 'DM';
+    if (scores['OR'] > scores[winner]) winner = 'OR';
+    if (scores['PL'] > scores[winner]) winner = 'PL';
+
+    var s = strains[winner];
+    document.getElementById('resultName').textContent = s.name;
+    document.getElementById('resultType').textContent = s.type;
+    document.getElementById('resultReason').textContent = s.reason;
+    document.getElementById('resultCta').href = s.url;
+    document.getElementById('resultCta').textContent = s.cta + ' →';
+
+    var tagsEl = document.getElementById('resultTags');
+    tagsEl.innerHTML = '';
+    s.tags.forEach(function (t) {
+      var span = document.createElement('span');
+      span.className = 'result-tag';
+      span.textContent = t;
+      tagsEl.appendChild(span);
+    });
+
+    document.getElementById('q2').classList.remove('active');
+    document.getElementById('dot0').classList.remove('active');
+    document.getElementById('dot1').classList.remove('active');
+    document.getElementById('dot2').classList.remove('active', 'done');
+    document.getElementById('dot0').classList.add('done');
+    document.getElementById('dot1').classList.add('done');
+    document.getElementById('dot2').classList.add('done');
+
+    var result = document.getElementById('resultCard');
+    result.classList.remove('active');
+    void result.offsetWidth;
+    result.classList.add('active');
+    sendHeight();
+  }
+
+  window.retake = function () {
+    scores = { DM: 0, OR: 0, PL: 0 };
+    answers = [null, null, null];
+    currentQ = 0;
+
+    document.getElementById('resultCard').classList.remove('active');
+
+    // Clear all selections
+    document.querySelectorAll('.option-btn').forEach(function (b) {
+      b.classList.remove('selected');
+    });
+
+    updateDots(0);
+    document.getElementById('q0').classList.remove('active');
+    void document.getElementById('q0').offsetWidth;
+    document.getElementById('q0').classList.add('active');
+    sendHeight();
+  };
+
+  function sendHeight() {
+    setTimeout(function () {
+      var h = document.getElementById('quizWrap').scrollHeight + 8;
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ iframeHeight: h }, '*');
+      }
+    }, 50);
+  }
+
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+
+})();
+</script>
+
+</body>
+</html>
